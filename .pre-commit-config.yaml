@@ -1,0 +1,11 @@
+# Spec Commit Matrix - canonical entrypoint: scripts/Spec_check.py
+# Root Spec_check.py is a shim for compatibility.
+repos:
+  - repo: local
+    hooks:
+      - id: spec-matrix-check
+        name: Spec Commit Matrix
+        entry: python scripts/Spec_check.py
+        language: system
+        always_run: true
+        pass_filenames: false

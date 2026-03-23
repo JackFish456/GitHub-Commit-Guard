@@ -1,0 +1,21 @@
+# Environment and secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+*.egg-info/
+.eggs/
+
+# pytest
+.pytest_cache/
+
+# Legacy/duplicate local files (canonical files are dot-prefixed)
+gitignore
+pre-commit-config.yaml
+env.example

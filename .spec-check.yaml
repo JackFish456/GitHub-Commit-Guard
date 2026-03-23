@@ -1,0 +1,18 @@
+# Spec Commit Matrix config
+# Policy: fail_closed, require_spec, llm_advisory
+# Deterministic rules: critical=>fail (blocks), medium=>warn
+
+mode: extended
+fail_closed: true
+require_spec: true
+llm_advisory: true
+
+# --- Rollout controls (Day 0-1 warning, then sign-off to enforce) ---
+# Warning-only for 1 day: set rollout_warning_until to tomorrow (YYYY-MM-DD)
+# Enforcing only after explicit sign-off: set sign_off_enforcing: true
+rollout_warning_until: ""   # e.g. "2025-03-24" = warning-only until that date
+sign_off_enforcing: false   # Set true to allow enforcing (explicit sign-off)
+enforcement: warning_only  # Use "enforcing" only after sign_off_enforcing: true
+
+# severity_overrides: {"exec_usage": "fail"}
+# disabled_rules: []
