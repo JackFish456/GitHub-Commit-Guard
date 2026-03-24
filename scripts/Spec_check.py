@@ -304,6 +304,8 @@ def get_staged_diff(config: dict[str, Any] | None = None) -> str:
                 ["git", "diff", "--cached", "--unified=3"],
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 check=False,
             )
         except OSError as exc:
@@ -316,13 +318,15 @@ def get_staged_diff(config: dict[str, Any] | None = None) -> str:
             print(f"[ERROR] git diff failed. {detail}. Fix: run from repo root, ensure you are in a git repo.", file=sys.stderr)
             sys.exit(1)
 
-        return result.stdout
+        return result.stdout or ""
 
     try:
         names_result = subprocess.run(
             ["git", "diff", "--cached", "--name-only"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=False,
         )
     except OSError as exc:
@@ -335,7 +339,7 @@ def get_staged_diff(config: dict[str, Any] | None = None) -> str:
         print(f"[ERROR] git diff --name-only failed. {detail}. Fix: run from repo root.", file=sys.stderr)
         sys.exit(1)
 
-    paths = [p.strip() for p in names_result.stdout.splitlines() if p.strip()]
+    paths = [p.strip() for p in (names_result.stdout or "").splitlines() if p.strip()]
     norm = lambda p: p.replace("\\", "/")
     included = []
     for path in paths:
@@ -361,6 +365,8 @@ def get_staged_diff(config: dict[str, Any] | None = None) -> str:
             ["git", "diff", "--cached", "--unified=3", "--", *included],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=False,
         )
     except OSError as exc:
@@ -373,7 +379,7 @@ def get_staged_diff(config: dict[str, Any] | None = None) -> str:
         print(f"[ERROR] git diff failed. {detail}. Fix: run from repo root.", file=sys.stderr)
         sys.exit(1)
 
-    return result.stdout
+    return result.stdout or ""
 
 
 def _severity_to_status(severity: str) -> str:
@@ -699,7 +705,7 @@ def main():
     _warn_legacy_files()
     config = load_spec_check_config()
     diff = get_staged_diff(config)
-    if not diff.strip():
+    if not (diff or "").strip():
         sys.exit(0)
 
     local_checks = run_local_checks(diff, config)

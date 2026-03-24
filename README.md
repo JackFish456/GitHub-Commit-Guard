@@ -1,8 +1,33 @@
 # Spec Commit Matrix
 
-A pre-commit hook that compares staged code against `SPEC.md` via local checks and optional LLM. Blocks commits that drift from the spec.
+**Spec Commit Matrix** helps teams keep commits aligned with a written product spec. This repository ([GitHub-Commit-Guard](https://github.com/JackFish456/GitHub-Commit-Guard)) ships a **pre-commit hook** that inspects your **staged** Git diff, runs **deterministic** security-style checks locally, and optionally asks an **OpenAI**-compatible model to compare the change to `SPEC.md`. Blocking behavior is governed by explicit policy (fail-closed vs advisory LLM); see [Policy](#policy).
+
+| | |
+|--|--|
+| **Step-by-step usage** | **[HOW_TO_USE.md](HOW_TO_USE.md)** — install, daily workflow, CLI, LLM on/off, porting to other repos |
+| **This file** | Conceptual overview, configuration reference, rule tables, rollout, troubleshooting |
+
+**Why use it:** reduce spec drift, catch risky patterns before push, and make “what we agreed to build” (`SPEC.md`) part of the commit path.
+
+### Prerequisites
+
+- **Python** 3.9+ (3.10+ typical); a **virtual environment** is recommended.
+- **Git** on your `PATH`; run hook-related commands from the **repo root**.
+- **OpenAI API key** in `.env` unless you disable the LLM (`SPEC_CHECK_USE_LLM=0` or `use_llm: false` in config).
+
+### Contents
+
+- [Quick start](#quick-start) · [Purpose](#purpose) · [How it works](#how-it-works) · [Policy](#policy)
+- [Operating modes](#operating-modes) · [Setup](#setup) · [Adding to a project](#adding-to-a-project)
+- [SPEC template](#spec-template) · [Initial spec setup](#initial-spec-setup) · [When the matrix blocks](#when-the-matrix-blocks)
+- [Optional `.spec-check.yaml`](#optional-spec-checkyaml) · [Deterministic rules](#deterministic-rules-local-no-network) · [Rollout plan](#rollout-plan)
+- [API configuration](#api-configuration) · [Troubleshooting](#troubleshooting) · [Running tests](#running-tests) · [Emergency bypass](#emergency-bypass)
+
+---
 
 ## Quick start
+
+For a full walkthrough (PowerShell vs bash, virtualenv, and daily workflow), see **[HOW_TO_USE.md](HOW_TO_USE.md)**.
 
 ```bash
 pip install -r requirements.txt
